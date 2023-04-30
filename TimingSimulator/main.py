@@ -1,8 +1,8 @@
-from ComputeEngine import ComputeEngine
-from DataEngine import DataEngine
-from Decode import Decode
-from Fetch import Fetch
-from Status import Status
+from computeEngine import ComputeEngine
+from dataEngine import DataEngine
+from decode import Decode
+from fetch import Fetch
+from status import Status
 import time
 import os
 

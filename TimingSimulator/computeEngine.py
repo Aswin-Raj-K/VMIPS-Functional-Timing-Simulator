@@ -1,5 +1,5 @@
-from Decode import Decode
-from Status import Status
+from decode import Decode
+from status import Status
 
 
 class ComputeEngine:

@@ -1,5 +1,5 @@
-import ComputeEngine
-from Status import Status
+import computeEngine
+from status import Status
 
 
 class Decode:
@@ -126,11 +126,11 @@ class Decode:
 
     def shouldPopCompute(self):
         return len(self.computeQueue) > 0 and ((self.computeQueue[0].get(
-            Decode.INSTR_NAME) in ComputeEngine.ComputeEngine.addPipelineInstr and self.computeEngine.getAddPipelineStatus() == Status.FREE)
+            Decode.INSTR_NAME) in computeEngine.ComputeEngine.addPipelineInstr and self.computeEngine.getAddPipelineStatus() == Status.FREE)
                                                or (self.computeQueue[0].get(
-                    Decode.INSTR_NAME) in ComputeEngine.ComputeEngine.mulPipelineInstr and self.computeEngine.getMulPipelineStatus() == Status.FREE)
+                    Decode.INSTR_NAME) in computeEngine.ComputeEngine.mulPipelineInstr and self.computeEngine.getMulPipelineStatus() == Status.FREE)
                                                or (self.computeQueue[0].get(
-                    Decode.INSTR_NAME) in ComputeEngine.ComputeEngine.divPipelineInstr and self.computeEngine.getDivPipelineStatus() == Status.FREE))
+                    Decode.INSTR_NAME) in computeEngine.ComputeEngine.divPipelineInstr and self.computeEngine.getDivPipelineStatus() == Status.FREE))
 
     def shouldPopData(self):
         return self.dataEngine.getStatus() == Status.FREE

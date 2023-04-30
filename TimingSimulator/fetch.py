@@ -1,4 +1,4 @@
-from Status import Status
+from status import Status
 
 
 class Fetch:
