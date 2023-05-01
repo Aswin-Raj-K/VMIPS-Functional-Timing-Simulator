@@ -5,7 +5,7 @@
 # Code.asm to see the functionality). Each of the instruction methods will return if the execution was successful or
 # not, they also update the program counter
 
-import ar7997_dg4015_funcsimulator as vs
+import main as vs
 
 
 class Instructions:

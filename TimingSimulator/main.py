@@ -1,3 +1,6 @@
+import argparse
+import glob
+
 from computeEngine import ComputeEngine
 from dataEngine import DataEngine
 from decode import Decode
@@ -6,8 +9,9 @@ from status import Status
 import time
 import os
 
+
 class Config(object):
-    def __init__(self, iodir, fileName = "Config.txt"):
+    def __init__(self, iodir, fileName="Config.txt"):
         self.filepath = os.path.abspath(os.path.join(iodir, fileName))
         self.parameters = {}  # dictionary of parameter name: value as strings.
         self.numberOfLanes = None
@@ -61,14 +65,16 @@ class IMEM(object):
             print("IMEM - ERROR: Couldn't open file in path:", self.filepath)
             raise
 
+
 class Core:
-    def __init__(self, config, imem):
+    def __init__(self, config, imem, iodir):
         self.config = config
         self.imem = imem
+        self.iodir = iodir
         self.compute = ComputeEngine(self.config.addPipelineDepth, self.config.mulPipelineDepth,
                                      self.config.divPipelineDepth, self.config.numberOfLanes)
         self.data = DataEngine(6, self.config.numberOfBanks, self.config.vectorLoadStorePipelineDepth)
-        self.decode = Decode(self.config.computeQueueDepth,self.config.dataQueueDepth, 8, 8, self.compute, self.data)
+        self.decode = Decode(self.config.computeQueueDepth, self.config.dataQueueDepth, 8, 8, self.compute, self.data)
         self.fetch = Fetch(self.imem.instructions, self.decode)
         self.compute.setFreeBusyBoard(self.decode.freeBusyBoard)
         self.data.setFreeBusyBoard(self.decode.freeBusyBoard)
@@ -85,6 +91,7 @@ class Core:
             self.compute.run(computeInstr, self.fetch.getCurrentVectorLength())
             self.data.run(dataInstr)
             self.clk += 1
+            print(self.fetch.addr)
 
         self.endTime = time.time()
         print("Timing Simulation Successful")
@@ -94,20 +101,46 @@ class Core:
         minutes = str(int(time_difference // 60))
         seconds = str(int(time_difference % 60))
         # milliseconds = str(int((time_difference - int(time_difference)) * 1000))
-        print("================RESULT================")
-        print("Clock Cycles: ", self.clk - 1)
-        print("Time Elapsed: ", minutes + "m", seconds + "s")
-        print("======================================")
+        self.dataOutput = []
 
-    def dumpResult(self):
+        self.dataOutput.append("================RESULT================")
+        self.dataOutput.append("Clock Cycles: " + str(self.clk - 1))
+        self.dataOutput.append("Time Elapsed: " + minutes + "m " + seconds + "s")
+        self.dataOutput.append("======================================")
+        for line in self.dataOutput:
+            print(line)
+
+    def dumpResult(self, fileName="Output.txt"):
+        filepath = os.path.abspath(os.path.join(iodir, fileName))
+        try:
+            with open(filepath, 'w') as opf:
+                lines = [str(line) + '\n' for line in self.dataOutput]
+                opf.writelines(lines)
+            print(fileName, "- Dumped output into output file in path:", filepath)
+        except:
+            print(fileName, "- ERROR: Couldn't open output file in path:", filepath)
         pass
+
+def parseArguments():
+    parser = argparse.ArgumentParser(
+        description='Vector Core Performance Model')
+    parser.add_argument('--iodir', default="IODir0", type=str,
+                        help='Path to the folder containing the input files - resolved data')
+    args = parser.parse_args()
+    return os.path.abspath(args.iodir)
 
 
 if __name__ == "__main__":
-    iodir = "IODir"
+    iodir = parseArguments()
+    txt_files = glob.glob(os.path.join(iodir, 'Config*.txt'))
     imem = IMEM(iodir)
-    config = Config(iodir)
-    core = Core(config,imem)
-    core.run()
-    core.printResult()
-    core.dumpResult()
+    for file in txt_files:
+        print("==============================")
+        fileName = os.path.basename(file)
+        print("Running:",fileName)
+        config = Config(iodir, fileName)
+        core = Core(config, imem, iodir)
+        core.run()
+        core.printResult()
+        core.dumpResult("Output" + fileName[len('Config'):fileName.index('.')] + ".txt")
+        print("==============================")

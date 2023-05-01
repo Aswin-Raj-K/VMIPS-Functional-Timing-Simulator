@@ -1,7 +1,7 @@
 import random
 import math
 import argparse
-import ar7997_dg4015_funcsimulator as vp
+import main as vp
 import os
 
 
@@ -28,6 +28,7 @@ def runSimulator(iodir):
     vcore.dumpRegs(iodir)
     sdmem.dump()
     vdmem.dump()
+    vcore.dumpResolvedData(iodir)
     return vcore
 
 

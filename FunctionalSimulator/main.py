@@ -233,7 +233,7 @@ if __name__ == "__main__":
     # parse arguments for input file location
     parser = argparse.ArgumentParser(
         description='Vector Core Performance Model')
-    parser.add_argument('--iodir', default="Temp", type=str,
+    parser.add_argument('--iodir', default="", type=str,
                         help='Path to the folder containing the input files - instructions and data.')
     args = parser.parse_args()
 
