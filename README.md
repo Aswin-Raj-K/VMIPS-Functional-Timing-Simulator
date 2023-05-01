@@ -3,8 +3,15 @@ The repo presents the VMIPS architecture, a high-performance processor architect
 
 ![alt text](Results/VMIPS_Architecture.png)
 
-To run functional simulator use,
+### To run functional simulator use,
 ```
-FunctionalSimulator main.py --iodir InputOutputDirectory
+FunctionalSimulator/main.py --iodir InputOutputDirectory
 ```
+
+
+### To run timing simulator use,
+```
+TimingSimulator/main.py --iodir InputOutputDirectory
+```
+
 
