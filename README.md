@@ -14,4 +14,6 @@ FunctionalSimulator/main.py --iodir InputOutputDirectory
 TimingSimulator/main.py --iodir InputOutputDirectory
 ```
 
+####Note: To run the Timing simulator, the Functional Simulator outputs resolvedData.txt, which needs to be placed in the input output directory of the timing simulator and renamed to Data.txt.
+
 
