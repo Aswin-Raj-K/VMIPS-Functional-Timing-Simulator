@@ -17,5 +17,7 @@ TimingSimulator/main.py --iodir InputOutputDirectory
 #### Note: To run the Timing simulator, the Functional Simulator outputs resolvedData.txt, which needs to be placed in the input output directory of the timing simulator and renamed to Data.txt.
 
 ### Performace trends observed using the simulator.
-| ![alt text](TimingSimulator/IODir1/Plots/dotPdt.png) | ![alt text](TimingSimulator/IODir1/Plots/fcLayer.png) |
-| For dot product of two vectors with length 450   | For a single FC layer |
+![alt text](TimingSimulator/IODir1/Plots/dotPdt.png) ![alt text](TimingSimulator/IODir1/Plots/fcLayer.png)
+For dot product of two vectors with length 450  For a single FC layer
+
+<img src="TimingSimulator/IODir1/Plots/dotPdt.png" width="400"/> <img src="TimingSimulator/IODir1/Plots/fcLayer.png" width="400"/>
