@@ -19,7 +19,8 @@ TimingSimulator/main.py --iodir InputOutputDirectory
 ## Performace trends observed using the simulator.
 ### For dot product of two vectors with length 450  
 <img src="TimingSimulator/IODir1/Plots/dotPdt.png" width="500">
-### For a single FC layer
+
+<h3>For a single FC layer</h3>
 <img src="TimingSimulator/IODir1/Plots/fcLayer.png" width="500">
 
 
