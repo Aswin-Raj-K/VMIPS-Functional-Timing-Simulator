@@ -1,5 +1,5 @@
 # Dispatch Queue parameters
-dataQueueDepth = 4
+dataQueueDepth = 16
 computeQueueDepth = 4
 
 # VDMEM LS parameters

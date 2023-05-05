@@ -148,7 +148,7 @@ def readFiles(iodir):
 def parseArguments():
     parser = argparse.ArgumentParser(
         description='Vector Core Performance Model')
-    parser.add_argument('--iodir', default="IODir1", type=str,
+    parser.add_argument('--iodir', default="IODir2", type=str,
                         help='Path to the folder containing the input files - resolved data')
     args = parser.parse_args()
     return os.path.abspath(args.iodir)
