@@ -1,4 +1,4 @@
- # Dispatch Queue parameters
+# Dispatch Queue parameters
 dataQueueDepth = 4
 computeQueueDepth = 4
 

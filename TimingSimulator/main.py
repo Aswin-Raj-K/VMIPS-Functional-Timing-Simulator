@@ -79,6 +79,7 @@ class Core:
         self.compute.setFreeBusyBoard(self.decode.freeBusyBoard)
         self.data.setFreeBusyBoard(self.decode.freeBusyBoard)
         self.clk = 1
+        self.clks = []
         self.startTime = None
         self.endTime = None
 
@@ -91,7 +92,7 @@ class Core:
             self.compute.run(computeInstr, self.fetch.getCurrentVectorLength())
             self.data.run(dataInstr)
             self.clk += 1
-            print(self.fetch.addr)
+            # print(self.fetch.addr)
 
         self.endTime = time.time()
         print("Timing Simulation Successful")
@@ -121,26 +122,50 @@ class Core:
             print(fileName, "- ERROR: Couldn't open output file in path:", filepath)
         pass
 
+
+def dumpSummary(iodir, cycles, fileName="Summary.txt"):
+    cycles.insert(0,"================SUMMARY================")
+    cycles.append("======================================")
+    filepath = os.path.abspath(os.path.join(iodir, fileName))
+    try:
+        with open(filepath, 'w') as opf:
+            lines = [str(line) + '\n' for line in cycles]
+            opf.writelines(lines)
+        print(fileName, "- Dumped summary into output file in path:", filepath)
+    except:
+        print(fileName, "- ERROR: Couldn't open output file in path:", filepath)
+    pass
+
+
+def readFiles(iodir):
+    files = os.listdir(iodir)
+    txt_files = [file_name for file_name in files if file_name.startswith("Config") and file_name.endswith(".txt")]
+    txt_files.sort(key=lambda file_name: int(file_name[len('Config'):file_name.index('.')]))
+    print(txt_files)
+    return txt_files
+
+
 def parseArguments():
     parser = argparse.ArgumentParser(
         description='Vector Core Performance Model')
-    parser.add_argument('--iodir', default="IODir0", type=str,
+    parser.add_argument('--iodir', default="IODir1", type=str,
                         help='Path to the folder containing the input files - resolved data')
     args = parser.parse_args()
     return os.path.abspath(args.iodir)
 
-
 if __name__ == "__main__":
     iodir = parseArguments()
-    txt_files = glob.glob(os.path.join(iodir, 'Config*.txt'))
+    txt_files = readFiles(iodir)
     imem = IMEM(iodir)
-    for file in txt_files:
+    cycles = []
+    for index, fileName in enumerate(txt_files):
         print("==============================")
-        fileName = os.path.basename(file)
-        print("Running:",fileName)
+        print("Running:", fileName)
         config = Config(iodir, fileName)
         core = Core(config, imem, iodir)
         core.run()
         core.printResult()
-        core.dumpResult("Output" + fileName[len('Config'):fileName.index('.')] + ".txt")
+        core.dumpResult("Output" + str(index) + ".txt")
         print("==============================")
+        cycles.append(fileName[:fileName.index(".")] + " " + str(core.clk))
+    dumpSummary(iodir, cycles)

@@ -46,11 +46,13 @@ class Decode:
         # region Popping out of the queue
         if self.shouldPopCompute():
             computeInstr = self.computeQueue.pop(0) if len(self.computeQueue) > 0 else None
+            self.__computeStatus = Status.FREE
         else:
             computeInstr = None
 
         if self.shouldPopData():
             dataInstr = self.dataQueue.pop(0) if len(self.dataQueue) > 0 else None
+            self.__dataStatus = Status.FREE
         else:
             dataInstr = None
 
@@ -67,42 +69,42 @@ class Decode:
             self.priorityQueue.append(self.instr)
             if self.instr.get(Decode.INSTR_TYPE) is None:
                 return Status.FAILED, None, None, None
-            toggle = False
-            for index, instr in enumerate(self.priorityQueue):
-                self.instr = instr
-                self.args = instr.get(Decode.INSTR_ARGS)
-                self.parseInstruction()
-                # Compute part
-                if self.__computeStatus == Status.FREE and instr.get(Decode.INSTR_TYPE) == Decode.INSTR_COMPUTE:
-                    if self.checkBusyBoard():
-                        self.updateBusyBoard()
-                        self.computeQueue.append(self.instr)
-                        toggle = True
-                        if len(self.computeQueue) == self.computeQueueDepth:
-                            self.__computeStatus = Status.BUSY
-                        else:
-                            self.__computeStatus = Status.FREE
-
-                # Data Part
-                elif self.__dataStatus == Status.FREE and instr.get(Decode.INSTR_TYPE) == Decode.INSTR_DATA:
-                    if self.checkBusyBoard():
-                        self.updateBusyBoard()
-                        self.dataQueue.append(self.instr)
-                        toggle = True
-                        if len(self.dataQueue) == self.dataQueueDepth:
-                            self.__dataStatus = Status.BUSY
-                        else:
-                            self.__dataStatus = Status.FREE
-
-                # Scalar Part
-                elif instr.get(Decode.INSTR_TYPE) == Decode.INSTR_SCALAR and self.checkBusyBoard():
+        toggle = False
+        for index, instr in enumerate(self.priorityQueue):
+            self.instr = instr
+            self.args = instr.get(Decode.INSTR_ARGS)
+            self.parseInstruction()
+            # Compute part
+            if self.__computeStatus == Status.FREE and instr.get(Decode.INSTR_TYPE) == Decode.INSTR_COMPUTE:
+                if self.checkBusyBoard():
                     self.updateBusyBoard()
+                    self.computeQueue.append(self.instr)
                     toggle = True
-                    self.scalarQueue.append(self.instr)
+                    if len(self.computeQueue) == self.computeQueueDepth:
+                        self.__computeStatus = Status.BUSY
+                    else:
+                        self.__computeStatus = Status.FREE
 
-                if toggle:
-                    self.priorityQueue.pop(index)
-                    break
+            # Data Part
+            elif self.__dataStatus == Status.FREE and instr.get(Decode.INSTR_TYPE) == Decode.INSTR_DATA:
+                if self.checkBusyBoard():
+                    self.updateBusyBoard()
+                    self.dataQueue.append(self.instr)
+                    toggle = True
+                    if len(self.dataQueue) == self.dataQueueDepth:
+                        self.__dataStatus = Status.BUSY
+                    else:
+                        self.__dataStatus = Status.FREE
+
+            # Scalar Part
+            elif instr.get(Decode.INSTR_TYPE) == Decode.INSTR_SCALAR and self.checkBusyBoard():
+                self.updateBusyBoard()
+                toggle = True
+                self.scalarQueue.append(self.instr)
+
+            if toggle:
+                self.priorityQueue.pop(index)
+                break
 
         return Status.SUCCESS, computeInstr, dataInstr, scalarInstr
 

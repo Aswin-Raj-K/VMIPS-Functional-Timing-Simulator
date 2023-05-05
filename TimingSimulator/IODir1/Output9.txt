@@ -1,4 +1,4 @@
 ================RESULT================
-Clock Cycles: 42565
-Time Elapsed: 4m 20s
+Clock Cycles: 1588
+Time Elapsed: 0m 0s
 ======================================
