@@ -5,8 +5,10 @@ Config3 1589
 Config4 2175
 Config5 1589
 Config6 1589
-Config7 1591
-Config8 1589
+Config7 1589
+Config8 1591
 Config9 1589
 Config10 1589
+Config11 1589
+Config12 1589
 ======================================
