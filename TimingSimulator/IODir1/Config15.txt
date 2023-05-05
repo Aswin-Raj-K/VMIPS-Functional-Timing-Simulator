@@ -7,7 +7,7 @@ vdmNumBanks = 16
 vlsPipelineDepth = 11
 
 # Compute Pipeline parameters
-numLanes = 4
+numLanes = 8
 pipelineDepthMul = 12
 pipelineDepthAdd = 2
 pipelineDepthDiv = 8

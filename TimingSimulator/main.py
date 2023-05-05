@@ -1,6 +1,8 @@
 import argparse
 import glob
 
+from matplotlib import pyplot as plt, ticker
+
 from computeEngine import ComputeEngine
 from dataEngine import DataEngine
 from decode import Decode
@@ -34,12 +36,7 @@ class Config(object):
             raise
 
     def parseParameters(self):
-        if self.parameters["dataQueueDepth"] is not None:
-            self.dataQueueDepth = self.parameters["dataQueueDepth"]
-        else:
-            self.dataQueueDepth = 4
-            print("dataQueueDepth not found in " + self.filepath + " taking 4 as default value.")
-
+        self.dataQueueDepth = self.parameters["dataQueueDepth"]
         self.computeQueueDepth = self.parameters["computeQueueDepth"]
         self.numberOfBanks = self.parameters["vdmNumBanks"]
         self.vectorLoadStorePipelineDepth = self.parameters["vlsPipelineDepth"]
@@ -124,7 +121,7 @@ class Core:
 
 
 def dumpSummary(iodir, cycles, fileName="Summary.txt"):
-    cycles.insert(0,"================SUMMARY================")
+    cycles.insert(0, "================SUMMARY================")
     cycles.append("======================================")
     filepath = os.path.abspath(os.path.join(iodir, fileName))
     try:
@@ -141,7 +138,7 @@ def readFiles(iodir):
     files = os.listdir(iodir)
     txt_files = [file_name for file_name in files if file_name.startswith("Config") and file_name.endswith(".txt")]
     txt_files.sort(key=lambda file_name: int(file_name[len('Config'):file_name.index('.')]))
-    print(txt_files)
+    # print(txt_files)
     return txt_files
 
 
@@ -152,6 +149,7 @@ def parseArguments():
                         help='Path to the folder containing the input files - resolved data')
     args = parser.parse_args()
     return os.path.abspath(args.iodir)
+
 
 if __name__ == "__main__":
     iodir = parseArguments()
@@ -165,7 +163,7 @@ if __name__ == "__main__":
         core = Core(config, imem, iodir)
         core.run()
         core.printResult()
-        core.dumpResult("Output" + str(index) + ".txt")
+        core.dumpResult("Output" + str(index + 1) + ".txt")
         print("==============================")
         cycles.append(fileName[:fileName.index(".")] + " " + str(core.clk))
     dumpSummary(iodir, cycles)
