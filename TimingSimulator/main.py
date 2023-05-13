@@ -150,12 +150,69 @@ def parseArguments():
     args = parser.parse_args()
     return os.path.abspath(args.iodir)
 
+#
+# def plotData(iodir, x, y, xlabel):
+#     fig, ax = plt.subplots()
+#
+#     # Plot the data on the axis
+#     ax.plot(x, y, '-o')
+#
+#     # Add labels to the axis and a title to the figure
+#     ax.set_xlabel(xlabel)
+#     ax.set_ylabel('Clock Cycles')
+#     ax.set_title('Clock Cycles vs ' + xlabel)
+#     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+#     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+#     filePath = os.path.abspath(
+#         os.path.join(iodir, os.path.join("Plots", "fcLayer_" + xlabel.replace(' ', '_') + ".png")))
+#     fig.savefig(filePath)
+#     # fig.savefig("dotPdtPlots_" + xlabel.replace(' ', '_') + ".png")
+#     plt.show()
+#
+#
+# def plotSubPlot(iodir, x, y):
+#     # Create a new figure and a grid of subplots with 3 rows and 1 column
+#     fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))
+#     # Plot the data on the subplots
+#     axs[0][0].plot(x[0:4], y[0:4])
+#     axs[0][0].set_title('Clk Cycles vs ' + "Number of Vector Banks")
+#     axs[0][0].set_xlabel("Number of Vector Banks")
+#
+#     axs[0][1].plot(x[4:8], y[4:8])
+#     axs[0][1].set_title('Clk Cycles vs ' + "Compute Queue Depth")
+#     axs[0][1].set_xlabel("Compute Queue Depth")
+#
+#     axs[1][0].plot(x[8:12], y[8:12])
+#     axs[1][0].set_title('Clk Cycles vs ' + "Data Queue Depth")
+#     axs[1][0].set_xlabel("Data Queue Depth")
+#
+#     axs[1][1].plot(x[12:], y[12:])
+#     axs[1][1].set_title('Clk Cycles vs ' + "Number of Lanes")
+#     axs[1][1].set_xlabel("Number of Lanes")
+#
+#     for a in axs:
+#         for ax in a:
+#             ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+#             ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+#             ax.set_ylabel('Performance')
+#
+#     # Adjust the layout of the subplots
+#     fig.tight_layout()
+#     figManager = plt.get_current_fig_manager()
+#     figManager.full_screen_toggle()
+#     filePath = os.path.abspath(
+#         os.path.join(iodir, os.path.join("Plots", "fcLayer.png")))
+#     fig.savefig(filePath, bbox_inches='tight')
+#     # Show the plot
+#     plt.show()
+
 
 if __name__ == "__main__":
     iodir = parseArguments()
     txt_files = readFiles(iodir)
     imem = IMEM(iodir)
     cycles = []
+    # noOfCycels = []
     for index, fileName in enumerate(txt_files):
         print("==============================")
         print("Running:", fileName)
@@ -166,4 +223,10 @@ if __name__ == "__main__":
         core.dumpResult("Output" + str(index + 1) + ".txt")
         print("==============================")
         cycles.append(fileName[:fileName.index(".")] + " " + str(core.clk))
+        # noOfCycels.append(core.clk)
+    # plotData(iodir, [32, 16, 8, 4], noOfCycels[:4], "Number of Vector Memory Banks")
+    # plotData(iodir, [16, 8, 4, 2], noOfCycels[4:8], "Depth of Compute Queue")
+    # plotData(iodir, [16, 8, 4, 2], noOfCycels[8:12], "Depth of Data Queue")
+    # plotData(iodir, [32, 16, 8, 4, 2], noOfCycels[12:], "Number of Lanes")
+    # plotSubPlot(iodir,[32, 16, 8, 4, 16, 8, 4, 2, 16, 8, 4, 2, 32, 16, 8, 4, 2], noOfCycels)
     dumpSummary(iodir, cycles)
